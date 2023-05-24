@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/tangguhriyadi/user-service/model"
 	"github.com/tangguhriyadi/user-service/service"
@@ -13,11 +14,13 @@ type UserController interface {
 
 type UserControllerImpl struct {
 	userService service.UserService
+	validate    *validator.Validate
 }
 
-func NewUserController(userService service.UserService) UserController {
+func NewUserController(userService service.UserService, validate *validator.Validate) UserController {
 	return &UserControllerImpl{
 		userService: userService,
+		validate:    validate,
 	}
 }
 
@@ -39,6 +42,13 @@ func (uc UserControllerImpl) Create(ctx *fiber.Ctx) error {
 
 	//body parsing
 	if err := ctx.BodyParser(&user); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	// request body validation
+	if err := uc.validate.Struct(&user); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
 		})
