@@ -47,7 +47,7 @@ func (uc UserControllerImpl) Create(ctx *fiber.Ctx) error {
 	//run business logic
 	if err := uc.userService.Create(c, &user); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": err,
+			"message": err.Error(),
 		})
 	}
 

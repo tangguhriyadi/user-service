@@ -10,6 +10,7 @@ import (
 type UserRepository interface {
 	GetAll(c context.Context) ([]model.Users, error)
 	Create(c context.Context, payload *model.Users) error
+	FindByUsername(c context.Context, username string) (*model.Users, error)
 }
 
 type UserRepositoryImpl struct {
@@ -43,4 +44,15 @@ func (ur UserRepositoryImpl) Create(c context.Context, payload *model.Users) err
 	}
 
 	return nil
+}
+
+func (ur UserRepositoryImpl) FindByUsername(c context.Context, username string) (*model.Users, error) {
+	var user model.Users
+	result := ur.db.WithContext(c).Where("username =?", username).First(&user)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &user, nil
 }

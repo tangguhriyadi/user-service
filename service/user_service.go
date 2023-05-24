@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 
 	"github.com/tangguhriyadi/user-service/model"
 	"github.com/tangguhriyadi/user-service/repository"
@@ -31,9 +32,19 @@ func (us UserServiceImpl) GetAll(c context.Context) ([]model.Users, error) {
 }
 
 func (us UserServiceImpl) Create(c context.Context, userPayload *model.Users) error {
-	err := us.userRepo.Create(c, userPayload)
-	if err != nil {
+
+	//check duplicat
+	checkUsername, err := us.userRepo.FindByUsername(c, userPayload.Username)
+	if checkUsername != nil {
+		return errors.New("username is already exist")
+	} else if err != nil {
 		return err
 	}
+
+	//execute query create
+	if err := us.userRepo.Create(c, userPayload); err != nil {
+		return err
+	}
+
 	return nil
 }
