@@ -12,6 +12,7 @@ type UserService interface {
 	GetAll(c context.Context) ([]model.Users, error)
 	Create(c context.Context, userPayload *model.Users) error
 	Update(c context.Context, userId string, payload *model.Users) error
+	GetById(c context.Context, userId string) (*model.Users, error)
 }
 
 type UserServiceImpl struct {
@@ -58,4 +59,12 @@ func (us UserServiceImpl) Update(c context.Context, userId string, payload *mode
 
 	return nil
 
+}
+
+func (us UserServiceImpl) GetById(c context.Context, userId string) (*model.Users, error) {
+	result, err := us.userRepo.GetById(c, userId)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }

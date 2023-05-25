@@ -26,3 +26,7 @@ type UserUpdate struct {
 	Deleted    bool       `gorm:"type:bool" json:"deleted"`
 	DeletedAt  *time.Time `gorm:"type:timestamp;default:null" json:"deleted_at"`
 }
+
+type UserParams struct {
+	Id int `gorm:"type:int" uri:"id" validate:"required"`
+}

@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"strconv"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/tangguhriyadi/user-service/dto"
@@ -12,6 +14,7 @@ type UserController interface {
 	GetAll(ctx *fiber.Ctx) error
 	Create(ctx *fiber.Ctx) error
 	Update(ctx *fiber.Ctx) error
+	GetById(ctx *fiber.Ctx) error
 }
 
 type UserControllerImpl struct {
@@ -102,4 +105,23 @@ func (uc UserControllerImpl) Update(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "succes update",
 	})
+}
+
+func (uc UserControllerImpl) GetById(ctx *fiber.Ctx) error {
+	c := ctx.Context()
+	userId := ctx.Params("id")
+
+	//param validator
+	_, err := strconv.Atoi(userId)
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid ID"})
+	}
+
+	//run business logic
+	result, err := uc.userService.GetById(c, userId)
+	if err != nil {
+		ctx.Status(fiber.StatusBadRequest).JSON(err.Error())
+	}
+
+	return ctx.Status(fiber.StatusOK).JSON(result)
 }
