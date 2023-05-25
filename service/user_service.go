@@ -6,6 +6,7 @@ import (
 
 	"github.com/tangguhriyadi/user-service/model"
 	"github.com/tangguhriyadi/user-service/repository"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService interface {
@@ -43,6 +44,14 @@ func (us UserServiceImpl) Create(c context.Context, userPayload *model.Users) er
 	} else if err != nil {
 		return err
 	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(userPayload.Password), bcrypt.DefaultCost)
+
+	if err != nil {
+		return err
+	}
+
+	userPayload.Password = string(hashedPassword)
 
 	//execute query create
 	if err := us.userRepo.Create(c, userPayload); err != nil {
