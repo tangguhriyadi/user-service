@@ -19,7 +19,8 @@ func main() {
 
 	v1 := app.Group("/v1")
 	v1.Get("/users", userController.GetAll)
-	v1.Post("/Users", userController.Create)
+	v1.Post("/users", userController.Create)
+	v1.Patch("/users/:id", userController.Update)
 
 	app.Listen(":8081")
 }

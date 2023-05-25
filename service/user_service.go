@@ -11,6 +11,7 @@ import (
 type UserService interface {
 	GetAll(c context.Context) ([]model.Users, error)
 	Create(c context.Context, userPayload *model.Users) error
+	Update(c context.Context, userId string, payload *model.Users) error
 }
 
 type UserServiceImpl struct {
@@ -47,4 +48,14 @@ func (us UserServiceImpl) Create(c context.Context, userPayload *model.Users) er
 	}
 
 	return nil
+}
+
+func (us UserServiceImpl) Update(c context.Context, userId string, payload *model.Users) error {
+
+	if err := us.userRepo.Update(c, userId, payload); err != nil {
+		return err
+	}
+
+	return nil
+
 }

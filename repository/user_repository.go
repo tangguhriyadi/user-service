@@ -12,6 +12,7 @@ type UserRepository interface {
 	GetAll(c context.Context) ([]model.Users, error)
 	Create(c context.Context, payload *model.Users) error
 	FindByUsername(c context.Context, username string) (*model.Users, error)
+	Update(c context.Context, userId string, payload *model.Users) error
 }
 
 type UserRepositoryImpl struct {
@@ -60,4 +61,14 @@ func (ur UserRepositoryImpl) FindByUsername(c context.Context, username string) 
 	}
 
 	return &user, nil
+}
+
+func (ur UserRepositoryImpl) Update(c context.Context, userId string, payload *model.Users) error {
+	result := ur.db.WithContext(c).Where("id = ?", userId).Updates(&payload)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
 }
