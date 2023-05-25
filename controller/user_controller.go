@@ -15,6 +15,7 @@ type UserController interface {
 	Create(ctx *fiber.Ctx) error
 	Update(ctx *fiber.Ctx) error
 	GetById(ctx *fiber.Ctx) error
+	Delete(ctx *fiber.Ctx) error
 }
 
 type UserControllerImpl struct {
@@ -124,4 +125,39 @@ func (uc UserControllerImpl) GetById(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Status(fiber.StatusOK).JSON(result)
+}
+
+func (uc UserControllerImpl) Delete(ctx *fiber.Ctx) error {
+	c := ctx.Context()
+
+	var user model.Users
+
+	var userUpdate dto.UserUpdate
+
+	userId := ctx.Params("id")
+
+	//body parsing
+	if err := ctx.BodyParser(&user); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	// request body validation
+	if err := uc.validate.Struct(&userUpdate); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	//run business logic
+	if err := uc.userService.Delete(c, userId); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "succes update",
+	})
 }

@@ -14,6 +14,7 @@ type UserRepository interface {
 	FindByUsername(c context.Context, username string) (*model.Users, error)
 	Update(c context.Context, userId string, payload *model.Users) error
 	GetById(c context.Context, userId string) (*model.Users, error)
+	Delete(c context.Context, userId string) error
 }
 
 type UserRepositoryImpl struct {
@@ -29,7 +30,7 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 func (ur UserRepositoryImpl) GetAll(c context.Context) ([]model.Users, error) {
 	var userEntity []model.Users
 
-	result := ur.db.WithContext(c).Find(&userEntity)
+	result := ur.db.WithContext(c).Where("deleted =?", false).Find(&userEntity)
 
 	if result.Error != nil {
 		return nil, result.Error
@@ -83,4 +84,19 @@ func (ur UserRepositoryImpl) GetById(c context.Context, userId string) (*model.U
 	}
 
 	return &user, nil
+}
+
+func (ur UserRepositoryImpl) Delete(c context.Context, userId string) error {
+
+	var user model.Users
+
+	user.Deleted = true
+
+	result := ur.db.WithContext(c).Where("id = ?", userId).Updates(&user)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
 }

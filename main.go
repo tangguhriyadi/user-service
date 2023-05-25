@@ -22,6 +22,7 @@ func main() {
 	v1.Post("/users", userController.Create)
 	v1.Patch("/users/:id", userController.Update)
 	v1.Get("/users/:id", userController.GetById)
+	v1.Delete("/users/:id", userController.Delete)
 
 	app.Listen(":8081")
 }

@@ -13,6 +13,7 @@ type UserService interface {
 	Create(c context.Context, userPayload *model.Users) error
 	Update(c context.Context, userId string, payload *model.Users) error
 	GetById(c context.Context, userId string) (*model.Users, error)
+	Delete(c context.Context, userId string) error
 }
 
 type UserServiceImpl struct {
@@ -67,4 +68,12 @@ func (us UserServiceImpl) GetById(c context.Context, userId string) (*model.User
 		return nil, err
 	}
 	return result, nil
+}
+
+func (us UserServiceImpl) Delete(c context.Context, userId string) error {
+	if err := us.userRepo.Delete(c, userId); err != nil {
+		return err
+	}
+
+	return nil
 }
