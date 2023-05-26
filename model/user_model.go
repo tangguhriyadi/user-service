@@ -34,3 +34,14 @@ type UserPayload struct {
 type UserResponseCreate struct {
 	Success bool `json:"success"`
 }
+
+type Login struct {
+	Username string `gorm:"type:varchar(300)" json:"username" validate:"required"`
+	Password string `gorm:"type:varchar(300)" json:"password" validate:"required"`
+}
+
+type LoginResponse struct {
+	UserId int       `json:"user_id"`
+	JWT    string    `json:"jwt"`
+	Exp    time.Time `json:"exp"`
+}

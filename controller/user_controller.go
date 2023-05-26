@@ -158,6 +158,6 @@ func (uc UserControllerImpl) Delete(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "succes update",
+		"message": "succes deleted",
 	})
 }
