@@ -4,12 +4,13 @@ import (
 	"context"
 	"errors"
 
+	"github.com/tangguhriyadi/user-service/dto"
 	"github.com/tangguhriyadi/user-service/model"
 	"gorm.io/gorm"
 )
 
 type UserRepository interface {
-	GetAll(c context.Context) ([]model.Users, error)
+	GetAll(c context.Context, page int, limit int) (dto.AllUsers, error)
 	Create(c context.Context, payload *model.Users) error
 	FindByUsername(c context.Context, username string) (*model.Users, error)
 	Update(c context.Context, userId string, payload *model.Users) error
@@ -27,16 +28,43 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 	}
 }
 
-func (ur UserRepositoryImpl) GetAll(c context.Context) ([]model.Users, error) {
+func (ur UserRepositoryImpl) GetAll(c context.Context, page int, limit int) (dto.AllUsers, error) {
 	var userEntity []model.Users
+	var count int64
 
-	result := ur.db.WithContext(c).Where("deleted =?", false).Find(&userEntity)
+	// var users []dto.UserData
 
-	if result.Error != nil {
-		return nil, result.Error
+	countResult := ur.db.WithContext(c).Model(&[]model.Users{}).Where("deleted =?", false).Count(&count)
+	if countResult.Error != nil {
+		return dto.AllUsers{}, countResult.Error
 	}
 
-	return userEntity, nil
+	result := ur.db.WithContext(c).Select("full_name, email, age, religion, gender, photo, is_verified").Where("deleted =?", false).Offset((page - 1) * limit).Limit(limit).Find(&userEntity)
+	if result.Error != nil {
+		return dto.AllUsers{}, result.Error
+	}
+
+	// for _, v := range userEntity {
+	// 	user := dto.UserData{
+	// 		FullName:   v.FullName,
+	// 		Email:      v.Email,
+	// 		Age:        v.Age,
+	// 		Religion:   v.Religion,
+	// 		Gender:     v.Gender,
+	// 		Photo:      v.Photo,
+	// 		IsVerified: v.IsVerified,
+	// 	}
+	// 	users = append(users, user)
+	// }
+
+	var allUsers = dto.AllUsers{
+		Data:       &userEntity,
+		Page:       page,
+		Limit:      limit,
+		TotalItems: count,
+	}
+
+	return allUsers, nil
 }
 
 func (ur UserRepositoryImpl) Create(c context.Context, payload *model.Users) error {

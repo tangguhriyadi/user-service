@@ -5,19 +5,19 @@ import (
 )
 
 type Users struct { //entity
-	Id         int        `gorm:"primaryKey" json:"id"`
+	Id         int        `gorm:"primaryKey" json:"-"`
 	FullName   string     `gorm:"type:varchar(300)" json:"full_name" validate:"required"`
 	Email      string     `gorm:"type:varchar(300)" json:"email" validate:"required"`
 	Age        int        `gorm:"type:int" json:"age" validate:"required"`
 	Religion   string     `gorm:"type:varchar(300)" json:"religion" validate:"required"`
 	Gender     string     `gorm:"type:varchar(300)" json:"gender" validate:"required"`
-	Username   string     `gorm:"type:varchar(300)" json:"username" validate:"required"`
-	Password   string     `gorm:"type:varchar(300)" json:"password" validate:"required"`
+	Username   string     `gorm:"type:varchar(300)" json:"-" validate:"required"`
+	Password   string     `gorm:"type:varchar(300)" json:"-" validate:"required"`
 	Photo      string     `gorm:"type:varchar(300)" json:"photo"`
 	LastLogin  time.Time  `gorm:"type:timestamp;default:null" json:"last_login"`
 	IsVerified bool       `gorm:"type:bool" json:"is_verified"`
-	Deleted    bool       `gorm:"type:bool" json:"deleted"`
-	DeletedAt  *time.Time `gorm:"type:timestamp;default:null" json:"deleted_at"`
+	Deleted    bool       `gorm:"type:bool" json:"-"`
+	DeletedAt  *time.Time `gorm:"type:timestamp;default:null" json:"-"`
 }
 
 type UserPayload struct {

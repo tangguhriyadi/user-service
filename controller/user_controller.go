@@ -32,10 +32,31 @@ func NewUserController(userService service.UserService, validate *validator.Vali
 
 func (uc UserControllerImpl) GetAll(ctx *fiber.Ctx) error {
 	c := ctx.Context()
-	result, err := uc.userService.GetAll(c)
+
+	page, err := strconv.Atoi(ctx.Query("page", "1"))
+	if err != nil {
+		ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "query page must be int",
+		})
+	}
+
+	limit, err := strconv.Atoi(ctx.Query("limit", "10"))
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "query limit must be int",
+		})
+	}
+
+	result, err := uc.userService.GetAll(c, page, limit)
+
+	if result.Data == nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "failed to retrieve data",
+		})
+	}
 
 	if err != nil {
-		ctx.Status(fiber.StatusBadRequest).JSON(err.Error())
+		return ctx.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
 
 	return ctx.Status(fiber.StatusOK).JSON(result)

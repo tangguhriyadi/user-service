@@ -4,13 +4,14 @@ import (
 	"context"
 	"errors"
 
+	"github.com/tangguhriyadi/user-service/dto"
 	"github.com/tangguhriyadi/user-service/model"
 	"github.com/tangguhriyadi/user-service/repository"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService interface {
-	GetAll(c context.Context) ([]model.Users, error)
+	GetAll(c context.Context, page int, limit int) (dto.AllUsers, error)
 	Create(c context.Context, userPayload *model.Users) error
 	Update(c context.Context, userId string, payload *model.Users) error
 	GetById(c context.Context, userId string) (*model.Users, error)
@@ -27,10 +28,10 @@ func NewUserService(userRepo repository.UserRepository) UserService {
 	}
 }
 
-func (us UserServiceImpl) GetAll(c context.Context) ([]model.Users, error) {
-	result, err := us.userRepo.GetAll(c)
+func (us UserServiceImpl) GetAll(c context.Context, page int, limit int) (dto.AllUsers, error) {
+	result, err := us.userRepo.GetAll(c, page, limit)
 	if err != nil {
-		return nil, err
+		return dto.AllUsers{}, err
 	}
 	return result, nil
 }
