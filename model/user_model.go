@@ -11,8 +11,8 @@ type Users struct { //entity
 	Age        int        `gorm:"type:int" json:"age" validate:"required"`
 	Religion   string     `gorm:"type:varchar(300)" json:"religion" validate:"required"`
 	Gender     string     `gorm:"type:varchar(300)" json:"gender" validate:"required"`
-	Username   string     `gorm:"type:varchar(300)" json:"-" validate:"required"`
-	Password   string     `gorm:"type:varchar(300)" json:"-" validate:"required"`
+	Username   string     `gorm:"type:varchar(300)" json:"username" validate:"required"`
+	Password   string     `gorm:"type:varchar(300)" json:"password" validate:"required"`
 	Photo      string     `gorm:"type:varchar(300)" json:"photo"`
 	LastLogin  time.Time  `gorm:"type:timestamp;default:null" json:"last_login"`
 	IsVerified bool       `gorm:"type:bool" json:"is_verified"`
