@@ -1,12 +1,14 @@
 package controller
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/tangguhriyadi/user-service/dto"
 	"github.com/tangguhriyadi/user-service/model"
+	"github.com/tangguhriyadi/user-service/security/token"
 	"github.com/tangguhriyadi/user-service/service"
 )
 
@@ -32,6 +34,10 @@ func NewUserController(userService service.UserService, validate *validator.Vali
 
 func (uc UserControllerImpl) GetAll(ctx *fiber.Ctx) error {
 	c := ctx.Context()
+
+	claims, err := token.ExtractTokenMetada(ctx)
+
+	fmt.Println(claims)
 
 	page, err := strconv.Atoi(ctx.Query("page", "1"))
 	if err != nil {

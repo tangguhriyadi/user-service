@@ -6,6 +6,7 @@ import (
 	"github.com/tangguhriyadi/user-service/controller"
 	"github.com/tangguhriyadi/user-service/infrastructure"
 	"github.com/tangguhriyadi/user-service/repository"
+	"github.com/tangguhriyadi/user-service/security/middleware"
 	"github.com/tangguhriyadi/user-service/service"
 )
 
@@ -23,7 +24,7 @@ func main() {
 	authController := controller.NewAuthController(authService, validator)
 
 	v1 := app.Group("/v1")
-	v1.Get("/users", userController.GetAll)
+	v1.Get("/users", middleware.JWTProtect(), userController.GetAll)
 	v1.Post("/users", userController.Create)
 	v1.Patch("/users/:id", userController.Update)
 	v1.Get("/users/:id", userController.GetById)
