@@ -1,15 +1,16 @@
 package middleware
 
 import (
+	"os"
+
 	"github.com/gofiber/fiber/v2"
 	jwtMiddleware "github.com/gofiber/jwt/v2"
-	"github.com/tangguhriyadi/user-service/infrastructure"
 )
 
 func JWTProtect() func(*fiber.Ctx) error {
-	envconfig := infrastructure.New()
+	// envconfig := infrastructure.New()
 	config := jwtMiddleware.Config{
-		SigningKey:   []byte(envconfig.Get("JWT_SECRET_KEY")),
+		SigningKey:   []byte(os.Getenv("JWT_SECRET_KEY")),
 		ContextKey:   "jwt",
 		ErrorHandler: jwtError,
 	}

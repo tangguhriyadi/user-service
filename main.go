@@ -12,7 +12,7 @@ import (
 
 func main() {
 	infrastructure.ConnectDB()
-	config := infrastructure.New() //get env
+	// config := infrastructure.New()
 	app := fiber.New()
 	var validator = validator.New()
 
@@ -20,7 +20,7 @@ func main() {
 	userService := service.NewUserService(userRepo)
 	userController := controller.NewUserController(userService, validator)
 
-	authService := service.NewAuthService(userRepo, config)
+	authService := service.NewAuthService(userRepo)
 	authController := controller.NewAuthController(authService, validator)
 
 	v1 := app.Group("/v1")
