@@ -56,6 +56,6 @@ jobs:
             whoami
             docker stop user-service || true && docker rm user-service || true
             docker pull ${{  vars.IMAGE_NAME  }}
-            docker run -p 8081:8081 --name ${{ vars.CONTAINER_NAME }} ${{ vars.IMAGE_NAME }}
+            docker run -d -p 8081:8081 --name ${{ vars.CONTAINER_NAME }} ${{ vars.IMAGE_NAME }}
           '
 
