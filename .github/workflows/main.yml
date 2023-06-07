@@ -32,15 +32,29 @@ jobs:
     environment: develop
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2 
       - name: Deploy to VPS
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SERVER_PORT }}
-          script: |
+        # with:
+        #   host: ${{ secrets.SERVER }}
+        #   username: ${{ secrets.SERVER_USERNAME }}
+        #   key: ${{ secrets.SSH_PRIVATE_KEY }}
+        #   port: ${{ secrets.SERVER_PORT }}
+        #   script: |
+        #     whoami
+        #     docker stop user-service || true && docker rm user-service || true
+        #     docker pull ${{  vars.IMAGE_NAME  }}
+        #     docker run -d 8081:8081 --name ${{ vars.CONTAINER_NAME }} ${{ vars.IMAGE_NAME }}
+        env:
+          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          HOSTNAME: ${{ secrets.SERVER }}
+          USER_NAME : ${{ secrets.SERVER_USERNAME  }}
+        
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}
+
             whoami
             docker stop user-service || true && docker rm user-service || true
             docker pull ${{  vars.IMAGE_NAME  }}
             docker run -d 8081:8081 --name ${{ vars.CONTAINER_NAME }} ${{ vars.IMAGE_NAME }}
+
