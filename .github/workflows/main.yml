@@ -54,8 +54,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
 
             whoami
-            docker stop user-service || true && docker rm user-service || true
-            docker pull ${{  vars.IMAGE_NAME  }}
-            docker run -d -p 8081:8081 --name ${{ vars.CONTAINER_NAME }} ${{ vars.IMAGE_NAME }}
+            docker stop tangguhriyadi/user-service || true && docker rm tangguhriyadi/user-service || true
+            docker pull tangguhriyadi/${{  vars.IMAGE_NAME  }}
+            docker run -d -p 8081:8081 --name tangguhriyadi/${{ vars.CONTAINER_NAME }} tangguhriyadi/${{ vars.IMAGE_NAME }}
           '
 
