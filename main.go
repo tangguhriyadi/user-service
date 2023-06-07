@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/tangguhriyadi/user-service/controller"
@@ -33,4 +35,6 @@ func main() {
 	app.Post("/login", authController.Login)
 
 	app.Listen(":8081")
+
+	fmt.Println("running...")
 }
