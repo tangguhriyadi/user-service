@@ -34,6 +34,10 @@ func (as AuthServiceImpl) Login(c context.Context, payload *model.Login) (*model
 		return nil, err
 	}
 
+	if username == nil {
+		return nil, errors.New("user not found")
+	}
+
 	if err := bcrypt.CompareHashAndPassword([]byte(username.Password), []byte(payload.Password)); err != nil {
 		return nil, errors.New("invalid credentials")
 	}

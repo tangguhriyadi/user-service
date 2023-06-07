@@ -23,14 +23,14 @@ func main() {
 	authService := service.NewAuthService(userRepo)
 	authController := controller.NewAuthController(authService, validator)
 
-	v1 := app.Group("/v1")
-	v1.Get("/users", middleware.JWTProtect(), userController.GetAll)
-	v1.Post("/users", userController.Create)
-	v1.Patch("/users/:id", userController.Update)
-	v1.Get("/users/:id", userController.GetById)
-	v1.Delete("/users/:id", userController.Delete)
+	// v1 := app.Group("/v1")
+	app.Get("/users", middleware.JWTProtect(), userController.GetAll)
+	app.Post("/users", userController.Create)
+	app.Patch("/users/:id", userController.Update)
+	app.Get("/users/:id", userController.GetById)
+	app.Delete("/users/:id", userController.Delete)
 
-	v1.Post("/auth/login", authController.Login)
+	app.Post("/login", authController.Login)
 
 	app.Listen(":8081")
 }
