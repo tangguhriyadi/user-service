@@ -32,5 +32,5 @@ func main() {
 
 	v1.Post("/auth/login", authController.Login)
 
-	app.Listen(":1001")
+	app.Listen(":8081")
 }
