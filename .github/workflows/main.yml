@@ -51,10 +51,11 @@ jobs:
         
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
 
             whoami
             docker stop user-service || true && docker rm user-service || true
             docker pull ${{  vars.IMAGE_NAME  }}
             docker run -d 8081:8081 --name ${{ vars.CONTAINER_NAME }} ${{ vars.IMAGE_NAME }}
+          '
 
