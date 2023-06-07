@@ -25,7 +25,7 @@ func main() {
 
 	// v1 := app.Group("/v1")
 	app.Get("/users", middleware.JWTProtect(), userController.GetAll)
-	app.Post("/users", userController.Create)
+	app.Post("/signup", userController.Create)
 	app.Patch("/users/:id", userController.Update)
 	app.Get("/users/:id", userController.GetById)
 	app.Delete("/users/:id", userController.Delete)
