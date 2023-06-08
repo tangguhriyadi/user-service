@@ -1,0 +1,208 @@
+definitions:
+  dto.AllUsers:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/model.Users'
+        type: array
+      limit:
+        type: integer
+      page:
+        type: integer
+      total_items:
+        type: integer
+    type: object
+  model.Login:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  model.LoginResponse:
+    properties:
+      exp:
+        type: string
+      jwt:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  model.Users:
+    properties:
+      age:
+        type: integer
+      email:
+        type: string
+      full_name:
+        type: string
+      gender:
+        type: string
+      is_verified:
+        type: boolean
+      last_login:
+        type: string
+      password:
+        type: string
+      photo:
+        type: string
+      religion:
+        type: string
+      username:
+        type: string
+    required:
+    - age
+    - email
+    - full_name
+    - gender
+    - password
+    - religion
+    - username
+    type: object
+info:
+  contact: {}
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login
+      parameters:
+      - description: The input struct
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.LoginResponse'
+      summary: Login
+      tags:
+      - auth
+  /auth/signup:
+    post:
+      consumes:
+      - application/json
+      description: create user
+      parameters:
+      - description: The input struct
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.Users'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Users'
+      summary: create user
+      tags:
+      - auth
+  /auth/users:
+    get:
+      consumes:
+      - application/json
+      description: get user list
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AllUsers'
+      security:
+      - Bearer: []
+      summary: get user list
+      tags:
+      - users
+  /auth/users/:id:
+    delete:
+      consumes:
+      - application/json
+      description: get user by ID
+      parameters:
+      - description: user ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Users'
+      security:
+      - Bearer: []
+      summary: get user by ID
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      description: get user by ID
+      parameters:
+      - description: user ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Users'
+      security:
+      - Bearer: []
+      summary: get user by ID
+      tags:
+      - users
+    patch:
+      consumes:
+      - application/json
+      description: update user
+      parameters:
+      - description: user ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: The input struct
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.Users'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Users'
+      security:
+      - Bearer: []
+      summary: update user
+      tags:
+      - users
+securityDefinitions:
+  Bearer:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

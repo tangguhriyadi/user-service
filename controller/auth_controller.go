@@ -23,6 +23,15 @@ func NewAuthController(authService service.AuthService, validate *validator.Vali
 	}
 }
 
+// ShowAccount godoc
+// @Summary      Login
+// @Description  Login
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param payload body model.Login true "The input struct"
+// @Success      200  {object}  model.LoginResponse
+// @Router       /auth/login [post]
 func (ac AuthControllerImpl) Login(ctx *fiber.Ctx) error {
 	c := ctx.Context()
 

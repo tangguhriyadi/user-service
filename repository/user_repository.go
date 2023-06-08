@@ -36,12 +36,12 @@ func (ur UserRepositoryImpl) GetAll(c context.Context, page int, limit int) (dto
 
 	countResult := ur.db.WithContext(c).Model(&[]model.Users{}).Where("deleted =?", false).Count(&count)
 	if countResult.Error != nil {
-		return dto.AllUsers{}, countResult.Error
+		return dto.AllUsers{}, nil
 	}
 
 	result := ur.db.WithContext(c).Select("full_name, email, age, religion, gender, photo, is_verified").Where("deleted =?", false).Offset((page - 1) * limit).Limit(limit).Find(&userEntity)
 	if result.Error != nil {
-		return dto.AllUsers{}, result.Error
+		return dto.AllUsers{}, nil
 	}
 
 	// for _, v := range userEntity {

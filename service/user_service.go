@@ -31,7 +31,7 @@ func NewUserService(userRepo repository.UserRepository) UserService {
 func (us UserServiceImpl) GetAll(c context.Context, page int, limit int) (dto.AllUsers, error) {
 	result, err := us.userRepo.GetAll(c, page, limit)
 	if err != nil {
-		return dto.AllUsers{}, err
+		return dto.AllUsers{}, nil
 	}
 	return result, nil
 }

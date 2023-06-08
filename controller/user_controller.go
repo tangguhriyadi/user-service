@@ -32,6 +32,15 @@ func NewUserController(userService service.UserService, validate *validator.Vali
 	}
 }
 
+// ShowAccount godoc
+// @Summary      get user list
+// @Description  get user list
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  dto.AllUsers
+// @Router       /auth/users [get]
+// @Security 	 Bearer
 func (uc UserControllerImpl) GetAll(ctx *fiber.Ctx) error {
 	c := ctx.Context()
 
@@ -68,6 +77,15 @@ func (uc UserControllerImpl) GetAll(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusOK).JSON(result)
 }
 
+// ShowAccount godoc
+// @Summary      create user
+// @Description  create user
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param payload body model.Users true "The input struct"
+// @Success      200  {object}  model.Users
+// @Router       /auth/signup [post]
 func (uc UserControllerImpl) Create(ctx *fiber.Ctx) error {
 	c := ctx.Context()
 
@@ -100,6 +118,17 @@ func (uc UserControllerImpl) Create(ctx *fiber.Ctx) error {
 
 }
 
+// ShowAccount godoc
+// @Summary      update user
+// @Description  update user
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param id path string true "user ID"
+// @Success      200  {object}  model.Users
+// @Param payload body model.Users true "The input struct"
+// @Router       /auth/users/:id [patch]
+// @Security 	 Bearer
 func (uc UserControllerImpl) Update(ctx *fiber.Ctx) error {
 	c := ctx.Context()
 
@@ -135,6 +164,16 @@ func (uc UserControllerImpl) Update(ctx *fiber.Ctx) error {
 	})
 }
 
+// ShowAccount godoc
+// @Summary      get user by ID
+// @Description  get user by ID
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param id path string true "user ID"
+// @Success      200  {object}  model.Users
+// @Router       /auth/users/:id [get]
+// @Security 	 Bearer
 func (uc UserControllerImpl) GetById(ctx *fiber.Ctx) error {
 	c := ctx.Context()
 	userId := ctx.Params("id")
@@ -154,6 +193,16 @@ func (uc UserControllerImpl) GetById(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusOK).JSON(result)
 }
 
+// ShowAccount godoc
+// @Summary      get user by ID
+// @Description  get user by ID
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param id path string true "user ID"
+// @Success      200  {object}  model.Users
+// @Router       /auth/users/:id [delete]
+// @Security 	 Bearer
 func (uc UserControllerImpl) Delete(ctx *fiber.Ctx) error {
 	c := ctx.Context()
 
