@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option go_package = "github.com/tangguhriyadi/user-service/user";
+
+package user;
+
+service UserService {
+    rpc GetUserById(RequestMessage) returns (ResponseMessage);
+}
+
+message RequestMessage {
+    int32 Id = 1;
+}
+
+message ResponseMessage {
+    string FullName = 1;
+    string Email = 2;
+    int32 Age = 3;
+}

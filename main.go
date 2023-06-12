@@ -23,6 +23,7 @@ import (
 // @description Type "Bearer" followed by a space and JWT token.
 func main() {
 	infrastructure.ConnectDB()
+	infrastructure.RunGrpc()
 
 	docs.SwaggerInfo.Title = "Content Service Dapur Santet"
 	docs.SwaggerInfo.Description = "test"
