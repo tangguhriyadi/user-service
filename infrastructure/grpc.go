@@ -5,32 +5,30 @@ import (
 	"log"
 	"net"
 	"strconv"
-	"sync"
 
+	pb "github.com/tangguhriyadi/grpc-user/user"
 	"github.com/tangguhriyadi/user-service/repository"
-	pb "github.com/tangguhriyadi/user-service/user"
 	"google.golang.org/grpc"
 )
 
 type dataUserServiceServer struct {
 	pb.UnimplementedUserServiceServer
-	mu       sync.Mutex
-	users    []*pb.ResponseMessage
+	// mu       sync.Mutex
+	// users    []*pb.ResponseMessage
 	userRepo repository.UserRepository
 }
 
 func (d *dataUserServiceServer) GetUserById(ctx context.Context, user *pb.RequestMessage) (*pb.ResponseMessage, error) {
-	userId := strconv.Itoa(int(user.Id))
-
+	getUserId := user.GetId()
+	userId := strconv.Itoa(int(getUserId))
 	result, err := d.userRepo.GetById(ctx, userId)
 	if err != nil {
 		return nil, err
 	}
-
-	ageString := strconv.Itoa(int(result.Age))
+	// ageString := strconv.Itoa(int(result.Age))
 
 	var response pb.ResponseMessage
-	response.Age = ageString
+	response.Age = int32(result.Age)
 	response.Email = result.Email
 	response.FullName = result.FullName
 
@@ -38,9 +36,11 @@ func (d *dataUserServiceServer) GetUserById(ctx context.Context, user *pb.Reques
 
 }
 
-func NewUserServer() *dataUserServiceServer {
-	s := dataUserServiceServer{}
-	return &s
+func NewUserServer(userRepo repository.UserRepository) *dataUserServiceServer {
+	// s := dataUserServiceServer{}
+	return &dataUserServiceServer{
+		userRepo: userRepo,
+	}
 }
 
 func RunGrpc() {
@@ -49,8 +49,10 @@ func RunGrpc() {
 		log.Fatalln("error lister", err)
 	}
 
+	userRepo := repository.NewUserRepository(DB)
+
 	grpcServer := grpc.NewServer()
-	pb.RegisterUserServiceServer(grpcServer, NewUserServer())
+	pb.RegisterUserServiceServer(grpcServer, NewUserServer(userRepo))
 
 	go func() {
 		if err := grpcServer.Serve(listen); err != nil {
